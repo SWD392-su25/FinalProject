@@ -18,12 +18,18 @@ import EventCalendar from "./components/event/EventCalendar";
 import EventManagement from "./components/admin/EventManagement";
 import LecturerManagement from "./components/admin/LecturerManagement";
 import StudentManagement from "./components/admin/StudentManagement";
+import Wallet from "./components/student/Wallet";
 
 import { Toolbar } from "@mui/material";
 
 const isAdmin = () => {
   const user = JSON.parse(localStorage.getItem("currentUser"));
   return user && user.role === "Admin";
+};
+
+const isStudent = () => {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  return user && user.role === "Student";
 };
 
 const App = () => {
@@ -36,52 +42,53 @@ const App = () => {
       className="app-wrapper"
       style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
     >
+      {/* Hiện Header + Toolbar nếu không ở trang login/register/forgot-password */}
       {!shouldHideHeader && <Header />}
-      {!shouldHideHeader && <Toolbar />}{" "}
-      {/* đẩy nội dung xuống dưới AppBar fixed */}
+      {!shouldHideHeader && <Toolbar />}
+
       <div className="content-wrap" style={{ flex: 1 }}>
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          {/* Trang chung */}
           <Route path="/home" element={<HomePage />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/detail/:eventID" element={<EventDetail />} />
           <Route path="/register/:eventID" element={<RegisterEvent />} />
           <Route path="/register-success" element={<RegisterSuccess />} />
-          <Route path="/history" element={<RegistrationHistory />} />
           <Route path="/event-calendar" element={<EventCalendar />} />
 
-          {/* Các route chỉ dành cho Admin */}
+          {/* Trang cá nhân */}
+          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/wallet"
+            element={isStudent() ? <Wallet /> : <Navigate to="/unauthorized" />}
+          />
+          <Route
+            path="/history"
+            element={
+              isStudent() ? <RegistrationHistory /> : <Navigate to="/unauthorized" />
+            }
+          />
+
+          {/* Quản lý (Admin) */}
           <Route
             path="/admin/events"
-            element={
-              isAdmin() ? <EventManagement /> : <Navigate to="/unauthorized" />
-            }
+            element={isAdmin() ? <EventManagement /> : <Navigate to="/unauthorized" />}
           />
           <Route
             path="/admin/students"
-            element={
-              isAdmin() ? (
-                <StudentManagement />
-              ) : (
-                <Navigate to="/unauthorized" />
-              )
-            }
+            element={isAdmin() ? <StudentManagement /> : <Navigate to="/unauthorized" />}
           />
           <Route
             path="/admin/lecturers"
-            element={
-              isAdmin() ? (
-                <LecturerManagement />
-              ) : (
-                <Navigate to="/unauthorized" />
-              )
-            }
+            element={isAdmin() ? <LecturerManagement /> : <Navigate to="/unauthorized" />}
           />
         </Routes>
       </div>
+
       {!shouldHideHeader && <Footer />}
     </div>
   );

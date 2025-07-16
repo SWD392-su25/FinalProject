@@ -1,6 +1,10 @@
+// src/components/student/RegistrationHistory.jsx
+
 import React from "react";
 import { Box, Typography, Paper, Divider } from "@mui/material";
 import { QRCodeCanvas } from "qrcode.react";
+import styles from "../../styles/UserDashboard.module.css";
+import StudentSidebar from "../student/StudentSidebar";
 
 // Mock data tạm thời, sau này thay bằng dữ liệu từ LocalStorage hoặc DB
 const mockHistory =
@@ -8,14 +12,22 @@ const mockHistory =
 
 export default function RegistrationHistory() {
   if (mockHistory.length === 0) {
+    <div className={styles.dashboardContainer}>
+      <StudentSidebar />
+      <div className={styles.content}>
     return (
       <Box textAlign="center" mt={5}>
         <Typography variant="h6">Bạn chưa đăng ký sự kiện nào.</Typography>
       </Box>
     );
+    </div>
+    </div>
   }
 
   return (
+    <div className={styles.dashboardContainer}>
+      <StudentSidebar />
+      <div className={styles.content}>
     <Box mt={5} px={3}>
       <Typography variant="h5" mb={3} fontWeight="bold" textAlign="center">
         Lịch sử đăng ký sự kiện
@@ -42,5 +54,7 @@ export default function RegistrationHistory() {
         </Paper>
       ))}
     </Box>
+    </div>
+    </div>
   );
 }

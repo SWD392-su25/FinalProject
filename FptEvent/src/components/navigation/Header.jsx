@@ -1,4 +1,5 @@
 // src/components/navigation/Header.jsx
+
 import React, { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
@@ -50,13 +51,12 @@ const Header = () => {
     >
       <Toolbar>
         {/* Logo + Tên */}
-        <Box sx={{ display: "flex", alignItems: "center", mr: 4 }}>
+        <Box sx={{ display: "flex", alignItems: "center", ml: 20 }}>
           <img
             src={FPTLogo}
             alt="FPT Logo"
-            width={36}
-            height={36}
-            style={{ marginRight: 8 }}
+            height={40}
+            style={{ marginRight: 8, width: "auto" }}
           />
           <Typography
             variant="h6"
@@ -74,7 +74,7 @@ const Header = () => {
         </Box>
 
         {/* Menu chính */}
-        <Box sx={{ display: "flex", flexGrow: 1, gap: 2 }}>
+        <Box sx={{ display: "flex", flexGrow: 1, gap: 2, ml: 5 }}>
           <Button component={RouterLink} to="/home" color="inherit">
             Home
           </Button>
@@ -106,13 +106,18 @@ const Header = () => {
           )}
         </Box>
 
-        {/* Avatar + Menu */}
-        <Box sx={{ flexGrow: 0 }}>
+        {/* Avatar + Tên người dùng + Menu */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mr: 20 }}>
+          <Typography variant="body1" fontWeight="medium">
+            {currentUser?.name}
+          </Typography>
+
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <Avatar alt="Avatar" src={AvatarImg} />
             </IconButton>
           </Tooltip>
+
           <Menu
             sx={{ mt: "45px" }}
             anchorEl={anchorElUser}
@@ -144,6 +149,15 @@ const Header = () => {
             >
               History
             </MenuItem>
+            {role === "Student" && (
+              <MenuItem
+                component={RouterLink}
+                to="/wallet"
+                onClick={handleCloseUserMenu}
+              >
+                Wallet
+              </MenuItem>
+            )}
             <MenuItem onClick={handleLogout} sx={{ color: "red" }}>
               Logout
             </MenuItem>

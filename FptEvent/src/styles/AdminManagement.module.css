@@ -1,0 +1,36 @@
+/* src/styles/AdminManagement.module.css */
+
+.adminContainer {
+  padding: 32px 40px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+.adminTitle {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #1e293b;
+  text-align: center;
+}
+
+.searchFilterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.MuiTableCell-head {
+  font-weight: bold !important;
+  background-color: #f0f4f8;
+}
+
+.MuiTableRow-root:hover {
+  background-color: #f9fafb;
+}
+
+.MuiTableCell-root {
+  vertical-align: middle;
+}

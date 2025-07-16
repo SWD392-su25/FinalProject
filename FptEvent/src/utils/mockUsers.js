@@ -19,18 +19,21 @@ export const users = [
     name: "Role Student",
     password: "1",
     role: "Student",
+    wallet: 50000000,
   },
   {
-    email: "giaphnse171532@fpt.edu.vn",
+    email: "giapho613@gmail.com",
     name: "Hồ Nguyên Giáp",
     password: "1",
     role: "Student",
+    wallet: 50000000,
   },
   {
     email: "duongndse171453@fpt.edu.vn",
     name: "Nguyễn Duy Dương",
     password: "1",
     role: "Student",
+    wallet: 50000000,
   },
   {
     email: "lecture@gmail.com",

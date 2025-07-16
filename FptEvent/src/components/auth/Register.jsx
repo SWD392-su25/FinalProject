@@ -1,4 +1,5 @@
-// src/components/Register.jsx
+// src/components/auth/Register.jsx
+
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "../../styles/AuthForm.module.css";
