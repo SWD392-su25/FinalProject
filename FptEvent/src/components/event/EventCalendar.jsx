@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Calendar, Views, dateFnsLocalizer } from "react-big-calendar";
 import { parse, startOfWeek, getDay, format } from "date-fns";
 import vi from "date-fns/locale/vi";
@@ -7,7 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import allEvents from "../../utils/mockEvents";
 
 // MUI imports
-import { Box, Container, Typography, Paper } from "@mui/material";
+import { Box, Container, Typography, Paper, Button } from "@mui/material";
 
 // Setup for date-fns
 const locales = { vi };
@@ -41,12 +42,23 @@ const events = allEvents
 
 export default function EventCalendar() {
   const [currentView, setCurrentView] = useState("week");
+  const navigate = useNavigate();
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h5" fontWeight="bold" gutterBottom color="primary">
-        Lịch sự kiện thực tế
-      </Typography>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h5" fontWeight="bold" color="primary">
+          Lịch sự kiện thực tế
+        </Typography>
+        <Button variant="outlined" onClick={() => navigate("/home")}>
+          Về trang chủ
+        </Button>
+      </Box>
 
       <Paper elevation={3} sx={{ p: 2, height: "75vh", overflow: "auto" }}>
         <Calendar

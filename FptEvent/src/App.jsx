@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
@@ -40,15 +39,35 @@ const App = () => {
   return (
     <div
       className="app-wrapper"
-      style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
-      {/* Hiện Header + Toolbar nếu không ở trang login/register/forgot-password */}
+      {/* Hiện Header nếu không ở trang login/register/forgot-password */}
       {!shouldHideHeader && <Header />}
       {!shouldHideHeader && <Toolbar />}
 
-      <div className="content-wrap" style={{ flex: 1 }}>
+      <div
+        className="content-wrap"
+        style={{
+          flex: 1,
+          paddingBottom: "60px", // 👈 tránh nội dung dính footer
+        }}
+      >
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route
+            path="/"
+            element={
+              JSON.parse(localStorage.getItem("currentUser")) ? (
+                <Navigate to="/home" />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -69,22 +88,40 @@ const App = () => {
           <Route
             path="/history"
             element={
-              isStudent() ? <RegistrationHistory /> : <Navigate to="/unauthorized" />
+              isStudent() ? (
+                <RegistrationHistory />
+              ) : (
+                <Navigate to="/unauthorized" />
+              )
             }
           />
 
           {/* Quản lý (Admin) */}
           <Route
             path="/admin/events"
-            element={isAdmin() ? <EventManagement /> : <Navigate to="/unauthorized" />}
+            element={
+              isAdmin() ? <EventManagement /> : <Navigate to="/unauthorized" />
+            }
           />
           <Route
             path="/admin/students"
-            element={isAdmin() ? <StudentManagement /> : <Navigate to="/unauthorized" />}
+            element={
+              isAdmin() ? (
+                <StudentManagement />
+              ) : (
+                <Navigate to="/unauthorized" />
+              )
+            }
           />
           <Route
             path="/admin/lecturers"
-            element={isAdmin() ? <LecturerManagement /> : <Navigate to="/unauthorized" />}
+            element={
+              isAdmin() ? (
+                <LecturerManagement />
+              ) : (
+                <Navigate to="/unauthorized" />
+              )
+            }
           />
         </Routes>
       </div>

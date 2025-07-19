@@ -16,8 +16,17 @@ export default function EventDetail() {
   const { eventID } = useParams();
   const navigate = useNavigate();
 
+  // Tìm sự kiện theo ID
   const event = allEvents.find((item) => item.id === Number(eventID));
 
+  // Lấy user hiện tại và kiểm tra role
+  const currentUser =
+    JSON.parse(localStorage.getItem("currentUser")) ||
+    JSON.parse(sessionStorage.getItem("currentUser"));
+
+  const isAdmin = currentUser?.role === "Admin";
+
+  // Nếu không tìm thấy sự kiện
   if (!event) {
     return (
       <Container maxWidth="sm">
@@ -25,63 +34,103 @@ export default function EventDetail() {
           <Alert severity="error" variant="filled">
             Không tìm thấy sự kiện
           </Alert>
+          <Button
+            variant="contained"
+            sx={{ mt: 2 }}
+            onClick={() => navigate("/home")}
+          >
+            Quay về trang chủ
+          </Button>
         </Box>
       </Container>
     );
   }
 
   return (
-    <Container maxWidth="md">
-      <Box mt={5} display="flex" justifyContent="center">
-        <Card sx={{ maxWidth: 600, width: "100%", boxShadow: 5 }}>
-          <CardMedia
-            component="img"
-            image={event.image}
-            alt={event.name}
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundImage: `url('https://images.unsplash.com/photo-1515169067865-5387ec356754?auto=format&fit=crop&w=1470&q=80')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        py: 5,
+      }}
+    >
+      <Container maxWidth="md">
+        <Box display="flex" justifyContent="center">
+          <Card
             sx={{
+              maxWidth: 700,
               width: "100%",
-              aspectRatio: "16/9",
-              objectFit: "cover",
-              borderTopLeftRadius: "4px",
-              borderTopRightRadius: "4px",
+              boxShadow: 6,
+              borderRadius: 3,
+              overflow: "hidden",
+              backdropFilter: "blur(10px)",
+              backgroundColor: "rgba(255, 255, 255, 0.9)",
             }}
-          />
-
-          <CardContent>
-            <Typography
-              variant="h5"
-              component="div"
-              fontWeight="bold"
-              color="primary"
-              gutterBottom
-            >
-              {event.name}
-            </Typography>
-
-            <Typography variant="body1" color="text.secondary">
-              <strong>Thời gian:</strong> {event.time} <br />
-              <strong>Địa điểm:</strong> {event.room} <br />
-              <strong>Số lượng:</strong> {event.quantity} người
-            </Typography>
-
-            <Button
-              variant="contained"
-              fullWidth
+          >
+            <CardMedia
+              component="img"
+              image={event.image}
+              alt={event.name}
               sx={{
-                backgroundColor: "#8F6B4A",
-                "&:hover": { backgroundColor: "#7c5a3d" },
+                height: 300,
+                objectFit: "cover",
               }}
-              onClick={() =>
-                navigate(`/register/${event.id}`, {
-                  state: { title: event.name },
-                })
-              }
-            >
-              Đăng ký tham gia
-            </Button>
-          </CardContent>
-        </Card>
-      </Box>
-    </Container>
+            />
+
+            <CardContent sx={{ p: 4 }}>
+              <Typography
+                variant="h4"
+                fontWeight="bold"
+                color="primary"
+                gutterBottom
+                textAlign="center"
+              >
+                {event.name}
+              </Typography>
+
+              <Typography variant="body1" color="text.secondary" mb={3}>
+                <strong>🕒 Thời gian:</strong> {event.time}
+                <br />
+                <strong>📍 Địa điểm:</strong> {event.room}
+                <br />
+                <strong>👥 Số lượng:</strong> {event.quantity} người
+              </Typography>
+
+              {/* Nếu không phải Admin thì hiện nút đăng ký */}
+              {!isAdmin && (
+                <Button
+                  variant="contained"
+                  size="large"
+                  fullWidth
+                  onClick={() =>
+                    navigate(`/register/${event.id}`, {
+                      state: { title: event.name },
+                    })
+                  }
+                  sx={{
+                    mb: 2,
+                    backgroundColor: "#4CAF50",
+                    ":hover": { backgroundColor: "#43A047" },
+                    fontWeight: "bold",
+                  }}
+                >
+                  Đăng ký tham gia
+                </Button>
+              )}
+
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={() => navigate("/home")}
+              >
+                Quay về trang chủ
+              </Button>
+            </CardContent>
+          </Card>
+        </Box>
+      </Container>
+    </Box>
   );
 }

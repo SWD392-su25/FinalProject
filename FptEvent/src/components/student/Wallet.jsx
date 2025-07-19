@@ -16,11 +16,12 @@ import {
   DialogContent,
   DialogActions,
   Chip,
+  Paper,
 } from "@mui/material";
 import { QRCodeCanvas } from "qrcode.react";
 import { users } from "../../utils/mockUsers";
-import styles from "../../styles/UserDashboard.module.css";
 import StudentSidebar from "./StudentSidebar";
+import styles from "../../styles/UserDashboard.module.css";
 
 export default function Wallet() {
   const [balance, setBalance] = useState(0);
@@ -29,7 +30,6 @@ export default function Wallet() {
   const [alert, setAlert] = useState(null);
   const [showQR, setShowQR] = useState(false);
   const [pendingAmount, setPendingAmount] = useState(0);
-  const [ setIsWithdraw] = useState(false);
 
   const currentUser =
     JSON.parse(localStorage.getItem("currentUser")) ||
@@ -43,13 +43,13 @@ export default function Wallet() {
     if (existingWallet) {
       setHistory(existingWallet.history || []);
 
-      // Tính balance từ các giao dịch đã được duyệt
-      const approvedBalance = existingWallet.history?.reduce((sum, tx) => {
-        if (tx.status === "Approved") {
-          return sum + (tx.type === "Nạp tiền" ? tx.amount : -tx.amount);
-        }
-        return sum;
-      }, 0) || 0;
+      const approvedBalance =
+        existingWallet.history?.reduce((sum, tx) => {
+          if (tx.status === "Approved") {
+            return sum + (tx.type === "Nạp tiền" ? tx.amount : -tx.amount);
+          }
+          return sum;
+        }, 0) || 0;
 
       setBalance(approvedBalance);
     } else {
@@ -77,7 +77,6 @@ export default function Wallet() {
       return;
     }
 
-    setIsWithdraw(false);
     setPendingAmount(value);
     setShowQR(true);
     setAlert(null);
@@ -90,8 +89,8 @@ export default function Wallet() {
       date: new Date().toLocaleString(),
       status: "Pending",
     };
-    const newHistory = [newTransaction, ...history];
 
+    const newHistory = [newTransaction, ...history];
     localStorage.setItem(
       "wallet_" + email,
       JSON.stringify({ history: newHistory })
@@ -137,7 +136,6 @@ export default function Wallet() {
     };
 
     const newHistory = [newTransaction, ...history];
-
     localStorage.setItem(
       "wallet_" + email,
       JSON.stringify({ history: newHistory })
@@ -155,14 +153,24 @@ export default function Wallet() {
     <div className={styles.dashboardContainer}>
       <StudentSidebar />
       <div className={styles.content}>
-        <Box sx={{ maxWidth: 600, mx: "auto", mt: 10, p: 3 }}>
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
-            Ví sinh viên
+        <Box sx={{ maxWidth: 700, mx: "auto", mt: 8, p: 3 }}>
+          <Typography
+            variant="h4"
+            fontWeight="bold"
+            color="primary"
+            gutterBottom
+          >
+            Ví Sinh Viên
           </Typography>
 
-          <Typography variant="h6" color="primary" gutterBottom>
-            Số dư đã xác nhận: {balance.toLocaleString()} VNĐ
-          </Typography>
+          <Paper sx={{ p: 3, mb: 3 }} elevation={3}>
+            <Typography variant="h6" color="text.secondary" mb={1}>
+              Số dư đã xác nhận:
+            </Typography>
+            <Typography variant="h5" color="success.main" fontWeight="bold">
+              {balance.toLocaleString()} VNĐ
+            </Typography>
+          </Paper>
 
           {alert && (
             <Alert severity={alert.type} sx={{ mb: 2 }}>
@@ -179,7 +187,7 @@ export default function Wallet() {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-            <Button variant="contained" onClick={handleTopUp}>
+            <Button variant="contained" color="primary" onClick={handleTopUp}>
               Nạp tiền
             </Button>
             <Button variant="outlined" color="error" onClick={handleWithdraw}>
@@ -187,48 +195,53 @@ export default function Wallet() {
             </Button>
           </Box>
 
-          <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+          <Typography variant="subtitle1" fontWeight="bold" mb={1}>
             Lịch sử giao dịch:
           </Typography>
 
-          <List>
-            {history.length === 0 ? (
-              <Typography variant="body2">Chưa có giao dịch nào.</Typography>
-            ) : (
-              history.map((item, index) => (
-                <React.Fragment key={index}>
-                  <ListItem
-                    secondaryAction={
-                      <Chip
-                        label={
-                          item.status === "Approved"
-                            ? "Đã duyệt"
-                            : item.status === "Rejected"
-                            ? "Từ chối"
-                            : "Đang chờ"
-                        }
-                        color={
-                          item.status === "Approved"
-                            ? "success"
-                            : item.status === "Rejected"
-                            ? "error"
-                            : "warning"
-                        }
-                        size="small"
-                      />
-                    }
-                  >
-                    <ListItemText
-                      primary={`${item.type}: ${item.type === "Nạp tiền" ? "+" : "-"
+          <Paper elevation={2}>
+            <List>
+              {history.length === 0 ? (
+                <Typography sx={{ p: 2 }} variant="body2">
+                  Chưa có giao dịch nào.
+                </Typography>
+              ) : (
+                history.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <ListItem
+                      secondaryAction={
+                        <Chip
+                          label={
+                            item.status === "Approved"
+                              ? "Đã duyệt"
+                              : item.status === "Rejected"
+                              ? "Từ chối"
+                              : "Đang chờ"
+                          }
+                          color={
+                            item.status === "Approved"
+                              ? "success"
+                              : item.status === "Rejected"
+                              ? "error"
+                              : "warning"
+                          }
+                          size="small"
+                        />
+                      }
+                    >
+                      <ListItemText
+                        primary={`${item.type}: ${
+                          item.type === "Nạp tiền" ? "+" : "-"
                         }${item.amount.toLocaleString()} VNĐ`}
-                      secondary={item.date}
-                    />
-                  </ListItem>
-                  <Divider />
-                </React.Fragment>
-              ))
-            )}
-          </List>
+                        secondary={item.date}
+                      />
+                    </ListItem>
+                    <Divider />
+                  </React.Fragment>
+                ))
+              )}
+            </List>
+          </Paper>
         </Box>
 
         <Dialog open={showQR} onClose={() => setShowQR(false)}>

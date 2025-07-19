@@ -11,11 +11,14 @@ import {
   Radio,
   Avatar,
   IconButton,
+  Paper,
+  Divider,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 import styles from "../../styles/UserDashboard.module.css";
@@ -23,11 +26,13 @@ import StudentSidebar from "../student/StudentSidebar";
 import defaultAvatar from "../../assets/Avatar.png";
 
 const Profile = () => {
+  const navigate = useNavigate();
+
   const [user, setUser] = useState({
     name: "",
     email: "",
     phone: "",
-    dob: "", //
+    dob: "",
     gender: "",
     avatar: defaultAvatar,
   });
@@ -80,43 +85,53 @@ const Profile = () => {
     alert("Thông tin đã được lưu!");
   };
 
+  const handleBackHome = () => {
+    navigate("/"); // hoặc "/home" tùy router bạn cấu hình
+  };
+
   return (
     <div className={styles.dashboardContainer}>
       <StudentSidebar />
       <div className={styles.content}>
-        <Typography variant="h5" fontWeight="bold" gutterBottom>
-          Thông tin tài khoản
+        <Typography variant="h4" fontWeight="bold" color="primary" mb={3}>
+          Hồ sơ cá nhân
         </Typography>
-        <Box mt={2} mb={3} position="relative" textAlign="center">
-          <Avatar
-            src={user.avatar}
-            alt="Avatar"
-            sx={{ width: 120, height: 120, margin: "0 auto" }}
-          />
-          <input
-            accept="image/*"
-            id="upload-avatar"
-            type="file"
-            style={{ display: "none" }}
-            onChange={handleAvatarChange}
-          />
-          <label htmlFor="upload-avatar">
-            <IconButton
-              color="primary"
-              component="span"
-              sx={{
-                position: "absolute",
-                bottom: 0,
-                right: "calc(50% - 60px)",
-                backgroundColor: "white",
-              }}
-            >
-              <PhotoCamera />
-            </IconButton>
-          </label>
-        </Box>
 
-        <Box sx={{ position: "relative", mx: 50 }}>
+        <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: "auto" }}>
+          <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
+            <Avatar
+              src={user.avatar}
+              alt="Avatar"
+              sx={{
+                width: 120,
+                height: 120,
+                border: "3px solid #1976d2",
+              }}
+            />
+            <input
+              accept="image/*"
+              id="upload-avatar"
+              type="file"
+              style={{ display: "none" }}
+              onChange={handleAvatarChange}
+            />
+            <label htmlFor="upload-avatar">
+              <IconButton
+                color="primary"
+                component="span"
+                sx={{
+                  mt: 1,
+                  backgroundColor: "#fff",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <PhotoCamera />
+              </IconButton>
+            </label>
+          </Box>
+
+          <Divider sx={{ mb: 3 }} />
+
           <TextField
             fullWidth
             label="Họ và tên"
@@ -145,7 +160,6 @@ const Profile = () => {
             margin="normal"
           />
 
-          {/* Ngày sinh sử dụng DatePicker */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Ngày sinh"
@@ -158,7 +172,9 @@ const Profile = () => {
             />
           </LocalizationProvider>
 
-          <Typography mt={2}>Giới tính</Typography>
+          <Typography mt={2} mb={1}>
+            Giới tính
+          </Typography>
           <RadioGroup
             row
             name="gender"
@@ -167,12 +183,29 @@ const Profile = () => {
           >
             <FormControlLabel value="Nam" control={<Radio />} label="Nam" />
             <FormControlLabel value="Nữ" control={<Radio />} label="Nữ" />
+            <FormControlLabel value="Khác" control={<Radio />} label="Khác" />
           </RadioGroup>
 
-          <Button variant="contained" sx={{ mt: 3 }} onClick={handleSave}>
-            Hoàn thành
+          <Button
+            fullWidth
+            variant="contained"
+            size="large"
+            sx={{ mt: 4 }}
+            onClick={handleSave}
+          >
+            Lưu thông tin
           </Button>
-        </Box>
+
+          <Button
+            fullWidth
+            variant="outlined"
+            color="secondary"
+            sx={{ mt: 2 }}
+            onClick={handleBackHome}
+          >
+            Quay về trang chính
+          </Button>
+        </Paper>
       </div>
     </div>
   );

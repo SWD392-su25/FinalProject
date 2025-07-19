@@ -64,7 +64,6 @@ export default function RegisterEvent() {
       return;
     }
 
-    // Điều hướng sang trang thành công, truyền dữ liệu qua state
     navigate("/register-success", {
       state: { name, email, eventName: event.name },
     });
@@ -76,21 +75,27 @@ export default function RegisterEvent() {
         maxWidth: 500,
         mx: "auto",
         mt: 5,
-        p: 3,
-        backgroundColor: "#FFF8E7",
-        borderRadius: 2,
+        p: 4,
+        backgroundColor: "#e8f5e9", // xanh lá nhạt
+        borderRadius: 3,
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
       }}
     >
       <Typography
         variant="h5"
         textAlign="center"
         fontWeight="bold"
-        color="#5A4032"
+        color="green"
         mb={1}
       >
-        Đăng ký tham gia
+        Đăng ký tham gia sự kiện
       </Typography>
-      <Typography variant="subtitle1" textAlign="center" color="#7A5D3F" mb={3}>
+      <Typography
+        variant="subtitle1"
+        textAlign="center"
+        color="text.secondary"
+        mb={3}
+      >
         {event.name}
       </Typography>
 
@@ -122,8 +127,8 @@ export default function RegisterEvent() {
         onClick={handleRegister}
         sx={{
           mt: 2,
-          backgroundColor: "#8F6B4A",
-          ":hover": { backgroundColor: "#7c593f" },
+          backgroundColor: "#43a047", // xanh lá đậm
+          ":hover": { backgroundColor: "#388e3c" },
         }}
       >
         Xác nhận đăng ký
